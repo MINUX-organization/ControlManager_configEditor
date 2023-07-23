@@ -1,0 +1,36 @@
+# depslib dependency file v1.0
+1690099933 source:/home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/src/encryption.cpp
+	"../include/encryption.h"
+
+1689677166 /home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/include/encryption.h
+	<random>
+	<cstring>
+	<algorithm>
+	<openssl/err.h>
+	<openssl/pem.h>
+	<openssl/rsa.h>
+	<fstream>
+	<sodium.h>
+
+1690119143 source:/home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/src/filemodifier.cpp
+	"../include/filemodifier.h"
+
+1690118643 /home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/include/filemodifier.h
+	<string>
+	<fstream>
+	<nlohmann/json.hpp>
+	<cstring>
+	<algorithm>
+	<iostream>
+	"encryption.h"
+
+1690113969 source:/home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/src/filemodifier_filework.cpp
+	"../include/filemodifier.h"
+
+1690118582 source:/home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/src/filemodifier_presets.cpp
+	"../include/filemodifier.h"
+
+1690119440 source:/home/aleksey/Documents/Projects/CodeBlocks/CommissionConfig_editor/main.cpp
+	<iostream>
+	"include/filemodifier.h"
+
