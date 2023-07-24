@@ -9,6 +9,11 @@
 
 #include <algorithm>
 
+// For SHA256 hashing
+#include <openssl/evp.h>
+#include <cstring>
+#include <iomanip>
+
 /**
 * @brief Max config file size in symbols can be read
 */
@@ -54,6 +59,37 @@ inline void write_err(const std::string what, const std::string errText)
 }
 
 
+inline std::string sha256(const std::string& str)
+{
+    if (str.empty()) {
+        return "";
+    }
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    std::memset(hash, 0, sizeof(hash));
+    EVP_MD_CTX* mdctx = EVP_MD_CTX_new();
+    const EVP_MD* md = EVP_sha256();
+    if (!mdctx || !md) {
+        EVP_MD_CTX_free(mdctx);
+        return "";
+    }
+    EVP_DigestInit_ex(mdctx, md, nullptr);
+    if (!EVP_DigestUpdate(mdctx, str.c_str(), str.size())) {
+        EVP_MD_CTX_free(mdctx);
+        return "";
+    }
+    unsigned int len;
+    if (!EVP_DigestFinal_ex(mdctx, hash, &len)) {
+        EVP_MD_CTX_free(mdctx);
+        return "";
+    }
+    EVP_MD_CTX_free(mdctx);
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');
+    for (unsigned int i = 0; i < len; i++) {
+        ss << std::setw(2) << static_cast<unsigned int>(hash[i]);
+    }
+    return ss.str();
+}
 
 
 
@@ -89,7 +125,6 @@ class FileModifier
         {
             std::string name;
             std::map<std::string, std::string> settings;
-            std::string config_hash; // TODO: Use it in commission and create here
             bool is_correct = true;
 
             /**
@@ -133,6 +168,8 @@ class FileModifier
         void addConfig(const std::string configPreset);
         void removeConfig(Config ** ppConfig);
 
+
+
     protected:
         Encryptor * m_encryptor;
 
@@ -142,8 +179,74 @@ class FileModifier
 
         std::vector <Config> m_configsArr;
 
-        std::string translate(Config & cfg);
-        Config translate(std::string & cfg);
+
+    public:
+        static std::string translate(Config & cfg)
+        {
+            std::string result;
+
+            nlohmann::json translator_cfg_to_json;
+
+            translator_cfg_to_json["name"] = cfg.name;
+
+            for (auto & field : cfg.settings)
+            {
+                translator_cfg_to_json[field.first] = field.second;
+            }
+
+            std::string hashBuffer = translator_cfg_to_json.dump();
+
+            translator_cfg_to_json["hash"] = sha256(hashBuffer);
+
+            write_info(std::string("Hash created: ") + sha256(hashBuffer));
+
+            result = translator_cfg_to_json.dump();
+
+            return result;
+        }
+
+        static Config translate(std::string & cfg)
+        {
+            Config result;
+            try
+            {
+                nlohmann::json translator_json_to_cfg;
+                nlohmann::json hashTest;
+
+                translator_json_to_cfg = nlohmann::json::parse(cfg);
+
+                for (auto& [key, value] : translator_json_to_cfg.items())
+                {
+                    if ((key != "name") && (key != "hash"))
+                    {
+                        result.settings[key] = value;
+                        hashTest[key] = value; // Remember to test for correct hash
+                    }
+                }
+
+                result.name = hashTest["name"] = translator_json_to_cfg["name"];
+
+                std::string configHash  = translator_json_to_cfg["hash"];
+                std::string hashBuffer = hashTest.dump();
+
+                write_info(std::string("Hash input: ") + configHash);
+                write_info(std::string("Hash check: ") + configHash);
+
+                if (configHash != sha256(hashBuffer))
+                {
+                    throw std::runtime_error("Config hash is not equal!");
+                }
+            }
+            catch (std::exception & ex)
+            {
+                result.name = "EXCEPTION: ";
+                result.name += ex.what();
+
+                result.is_correct = false;
+            }
+
+            return result;
+        }
 };
 
 #endif // FILEMODIFIER_H

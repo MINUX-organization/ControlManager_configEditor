@@ -27,6 +27,10 @@ int main()
         std::string answer, errorText;
         bool done = false;
 
+
+
+        /*
+
         while (!done)
         {
             // User interface
@@ -68,7 +72,7 @@ int main()
                 done = answer == "y";
             }
         }
-
+        */
         delete enc; // Free
     }
     write_info("Thanks for using Commission Config file editor");

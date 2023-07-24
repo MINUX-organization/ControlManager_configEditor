@@ -35,59 +35,6 @@ std::string Encryptor::decrypt(const std::string input)
     return result;
 }
 
-
-std::string FileModifier::translate(Config & cfg)
-{
-    std::string result;
-
-    nlohmann::json translator_cfg_to_json;
-
-    translator_cfg_to_json["name"] = cfg.name;
-
-    for (auto & field : cfg.settings)
-    {
-        translator_cfg_to_json[field.first] = field.second;
-    }
-
-    translator_cfg_to_json["hash"] = cfg.config_hash;
-
-    result = translator_cfg_to_json.dump();
-
-    return result;
-}
-
-FileModifier::Config FileModifier::translate(std::string & cfg)
-{
-    Config result;
-    try
-    {
-        nlohmann::json translator_json_to_cfg;
-
-        translator_json_to_cfg = nlohmann::json::parse(cfg);
-
-        for (auto& [key, value] : translator_json_to_cfg.items())
-        {
-            if ((key != "name") && (key != "hash"))
-            {
-                result.settings[key] = value;
-            }
-        }
-
-        result.name         = translator_json_to_cfg["name"];
-        result.config_hash  = translator_json_to_cfg["hash"];
-    }
-    catch (std::exception & ex)
-    {
-        result.name = "EXCEPTION: ";
-        result.name += ex.what();
-
-        result.is_correct = false;
-    }
-
-    return result;
-}
-
-
 void FileModifier::showAllNames()
 {
     for (auto & cfg : m_configsArr)
