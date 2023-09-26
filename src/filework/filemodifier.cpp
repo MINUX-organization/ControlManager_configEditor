@@ -1,4 +1,4 @@
-#include "../include/filemodifier.h"
+#include "filemodifier.h"
 
 std::string Encryptor::encrypt(const std::string input)
 {
