@@ -18,7 +18,7 @@ struct TreeItem
 class TreeModelHandler
 {
 public:
-    TreeModelHandler();
+    TreeModelHandler(const QModelIndex & headIndex);
     ~TreeModelHandler();
 
     TreeItem * findItem(const QModelIndex & index);

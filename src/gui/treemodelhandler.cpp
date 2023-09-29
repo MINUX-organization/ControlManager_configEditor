@@ -1,5 +1,7 @@
 #include "treemodelhandler.h"
 
+#include <QDebug>
+
 using namespace ConfigItemModel;
 
 struct TreeModelHandler::Impl
@@ -13,11 +15,14 @@ struct TreeModelHandler::Impl
 
     void clearRecursive(TreeItem * parent)
     {
-        for (auto pItem : parent->childrenVect)
+        for (TreeItem * pItem : parent->childrenVect)
         {
             clearRecursive(pItem);
         }
-        delete parent;
+        if (parent != &head)
+        {
+            delete parent;
+        }
     }
 
     TreeItem * findItem(const QModelIndex & index, TreeItem * parent)
@@ -49,10 +54,10 @@ struct TreeModelHandler::Impl
     }
 };
 
-TreeModelHandler::TreeModelHandler() :
+TreeModelHandler::TreeModelHandler(const QModelIndex & headIndex) :
     m_pImpl { new Impl }
 {
-
+    m_pImpl->head.index = headIndex;
 }
 
 TreeModelHandler::~TreeModelHandler()

@@ -7,6 +7,10 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+namespace ConfigItemModel {
+    class ConfigItemTreeModel;
+}
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,5 +21,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    ConfigItemModel::ConfigItemTreeModel * m_pConfigModel;
+
+    void setupModel();
 };
 #endif // MAINWINDOW_H
