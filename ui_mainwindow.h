@@ -18,6 +18,7 @@
 #include <QtWidgets/QListView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
@@ -34,11 +35,10 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
-    QTreeView *configFile_treeView;
     QSpacerItem *verticalSpacer;
-    QListView *options_listView;
     QWidget *widget;
     QGridLayout *gridLayout_2;
+    QLineEdit *filePath_lineEdit;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer;
     QPushButton *save_pushButton;
@@ -47,11 +47,13 @@ public:
     QRadioButton *jsonOutput_radioButton;
     QRadioButton *configOutput_radioButton;
     QSpacerItem *horizontalSpacer_2;
-    QLineEdit *filePath_lineEdit;
     QVBoxLayout *verticalLayout;
     QPushButton *addOption_pushButton;
     QPushButton *editOption_pushButton;
     QPushButton *removeOption_pushButton;
+    QProgressBar *progressBar;
+    QListView *options_listView;
+    QTreeView *configFile_treeView;
     QMenuBar *menubar;
     QStatusBar *statusbar;
     QToolBar *toolBar;
@@ -60,36 +62,29 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(744, 613);
+        MainWindow->resize(803, 639);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        configFile_treeView = new QTreeView(centralwidget);
-        configFile_treeView->setObjectName(QString::fromUtf8("configFile_treeView"));
-        configFile_treeView->setMinimumSize(QSize(350, 400));
-
-        gridLayout->addWidget(configFile_treeView, 0, 0, 1, 2);
-
         verticalSpacer = new QSpacerItem(20, 10, QSizePolicy::Minimum, QSizePolicy::Preferred);
 
-        gridLayout->addItem(verticalSpacer, 3, 2, 1, 1);
-
-        options_listView = new QListView(centralwidget);
-        options_listView->setObjectName(QString::fromUtf8("options_listView"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(options_listView->sizePolicy().hasHeightForWidth());
-        options_listView->setSizePolicy(sizePolicy);
-        options_listView->setMaximumSize(QSize(16777215, 16777215));
-
-        gridLayout->addWidget(options_listView, 0, 2, 1, 1);
+        gridLayout->addItem(verticalSpacer, 2, 2, 1, 1);
 
         widget = new QWidget(centralwidget);
         widget->setObjectName(QString::fromUtf8("widget"));
         gridLayout_2 = new QGridLayout(widget);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        filePath_lineEdit = new QLineEdit(widget);
+        filePath_lineEdit->setObjectName(QString::fromUtf8("filePath_lineEdit"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(filePath_lineEdit->sizePolicy().hasHeightForWidth());
+        filePath_lineEdit->setSizePolicy(sizePolicy);
+
+        gridLayout_2->addWidget(filePath_lineEdit, 0, 1, 1, 1);
+
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -130,16 +125,6 @@ public:
 
         gridLayout_2->addLayout(horizontalLayout, 1, 1, 1, 1);
 
-        filePath_lineEdit = new QLineEdit(widget);
-        filePath_lineEdit->setObjectName(QString::fromUtf8("filePath_lineEdit"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(filePath_lineEdit->sizePolicy().hasHeightForWidth());
-        filePath_lineEdit->setSizePolicy(sizePolicy1);
-
-        gridLayout_2->addWidget(filePath_lineEdit, 0, 1, 1, 1);
-
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         addOption_pushButton = new QPushButton(widget);
@@ -160,13 +145,40 @@ public:
 
         gridLayout_2->addLayout(verticalLayout, 0, 2, 2, 1);
 
+        progressBar = new QProgressBar(widget);
+        progressBar->setObjectName(QString::fromUtf8("progressBar"));
+        progressBar->setMinimumSize(QSize(0, 10));
+        progressBar->setMaximumSize(QSize(16777215, 10));
+        progressBar->setMaximum(100);
+        progressBar->setValue(0);
+        progressBar->setTextVisible(false);
 
-        gridLayout->addWidget(widget, 2, 2, 1, 1);
+        gridLayout_2->addWidget(progressBar, 2, 1, 1, 2);
+
+
+        gridLayout->addWidget(widget, 1, 2, 1, 1);
+
+        options_listView = new QListView(centralwidget);
+        options_listView->setObjectName(QString::fromUtf8("options_listView"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(options_listView->sizePolicy().hasHeightForWidth());
+        options_listView->setSizePolicy(sizePolicy1);
+        options_listView->setMaximumSize(QSize(16777215, 16777215));
+
+        gridLayout->addWidget(options_listView, 0, 2, 1, 1);
+
+        configFile_treeView = new QTreeView(centralwidget);
+        configFile_treeView->setObjectName(QString::fromUtf8("configFile_treeView"));
+        configFile_treeView->setMinimumSize(QSize(350, 400));
+
+        gridLayout->addWidget(configFile_treeView, 0, 0, 1, 2);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 744, 22));
+        menubar->setGeometry(QRect(0, 0, 803, 22));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));

@@ -2,43 +2,71 @@
 
 #include "configsLib/configworker.h"
 
-struct TreeItem
-{
-    QVariant data;
-    TreeItem * parent {nullptr};
-    QVector<TreeItem *> childrenVect;
-    QModelIndex index;
-};
+#include "treemodelhandler.h"
 
-struct ConfigItemModel::Impl
+using namespace ConfigItemModel;
+
+struct ConfigItemTreeModel::Impl
 {
-    TreeItem head;
+    TreeModelHandler m_handler;
     ConfigsLib::ConfigWorker m_configWorker;
+
+    ConfigItemTreeModel * m_mainClass {nullptr};
+
+    Impl(ConfigItemTreeModel * parent) : m_mainClass{ parent }
+    {
+        if (!m_mainClass)
+        {
+            throw std::runtime_error("[ConfigItemTreeModel] Class init error!");
+        }
+    }
+
+    QModelIndex findIndex(int row, int column, const QModelIndex & parent)
+    {
+
+    }
 };
 
-ConfigItemModel::ConfigItemModel(QObject *parent)
+ConfigItemTreeModel::ConfigItemTreeModel(QObject *parent)
     : QAbstractItemModel(parent),
-    m_pImpl{ new Impl }
+    m_pImpl{ new Impl(this) }
 {
 
 }
 
-QVariant ConfigItemModel::headerData(int section, Qt::Orientation orientation, int role) const
+ConfigItemTreeModel::~ConfigItemTreeModel()
+{
+
+}
+
+
+#define DECLARE_CALL(func)                                                      ConfigItemTreeModel::func()                                                 { return m_pImpl->func(); }
+#define DECLARE_CALL_CONST(func)                                                ConfigItemTreeModel::func()                                         const   { return m_pImpl->func(); }
+#define DECLARE_CALL_1ARG(func, type1, arg1)                                    ConfigItemTreeModel::func(type1 arg1)                                       { return m_pImpl->func(arg1); }
+#define DECLARE_CALL_2ARG(func, type1, arg1, type2, arg2)                       ConfigItemTreeModel::func(type1 arg1, type2 arg2)                           { return m_pImpl->func(arg1, arg2); }
+#define DECLARE_CALL_3ARG(func, type1, arg1, type2, arg2, type3, arg4)          ConfigItemTreeModel::func(type1 arg1, type2 arg2, type3 arg3)               { return m_pImpl->func(arg1, arg2, arg3); }
+
+QVariant ConfigItemTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole)
+    {
+        return QVariant();
+    }
+
+    return QVariant("Config name");
+}
+
+QModelIndex ConfigItemTreeModel::index(int row, int column, const QModelIndex &parent) const
+{
+    return m_pImpl->findIndex(row, column, parent);
+}
+
+QModelIndex ConfigItemTreeModel::parent(const QModelIndex &index) const
 {
     // FIXME: Implement me!
 }
 
-QModelIndex ConfigItemModel::index(int row, int column, const QModelIndex &parent) const
-{
-    // FIXME: Implement me!
-}
-
-QModelIndex ConfigItemModel::parent(const QModelIndex &index) const
-{
-    // FIXME: Implement me!
-}
-
-int ConfigItemModel::rowCount(const QModelIndex &parent) const
+int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid())
         return 0;
@@ -46,7 +74,7 @@ int ConfigItemModel::rowCount(const QModelIndex &parent) const
     // FIXME: Implement me!
 }
 
-int ConfigItemModel::columnCount(const QModelIndex &parent) const
+int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
 {
     if (!parent.isValid())
         return 0;
@@ -54,7 +82,7 @@ int ConfigItemModel::columnCount(const QModelIndex &parent) const
     // FIXME: Implement me!
 }
 
-QVariant ConfigItemModel::data(const QModelIndex &index, int role) const
+QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();

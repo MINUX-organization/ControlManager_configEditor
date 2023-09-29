@@ -4,12 +4,15 @@
 #include <QAbstractItemModel>
 #include <memory>
 
-class ConfigItemModel : public QAbstractItemModel
+namespace ConfigItemModel
+{
+
+class ConfigItemTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
-
 public:
-    explicit ConfigItemModel(QObject *parent = nullptr);
+    explicit ConfigItemTreeModel(QObject *parent = nullptr);
+    ~ConfigItemTreeModel();
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -35,4 +38,5 @@ private:
     std::unique_ptr<Impl> m_pImpl;
 };
 
+}
 #endif // CONFIGITEMMODEL_H
