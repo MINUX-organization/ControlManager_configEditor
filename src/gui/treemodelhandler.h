@@ -21,8 +21,9 @@ public:
     TreeModelHandler();
     ~TreeModelHandler();
 
-    TreeItem * findItem(const QModelIndex & index, TreeItem * parent);
+    TreeItem * findItem(const QModelIndex & index);
 
+    TreeItem & getHead();
     QModelIndex getHeadIndex();
 private:
     struct Impl;

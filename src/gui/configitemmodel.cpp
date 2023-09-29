@@ -23,7 +23,54 @@ struct ConfigItemTreeModel::Impl
 
     QModelIndex findIndex(int row, int column, const QModelIndex & parent)
     {
+        Q_UNUSED(column) // TODO: Add fields and use?
 
+        TreeItem * pParent = m_handler.findItem(parent);
+
+        if (pParent)
+        {
+            if (row < pParent->childrenVect.size())
+            {
+                return pParent->childrenVect[row]->index;
+            }
+        }
+        return QModelIndex();
+    }
+
+    int rowCount(const QModelIndex &parent)
+    {
+        TreeItem * pParent = m_handler.findItem(parent);
+        if (pParent)
+        {
+            return pParent->childrenVect.size();
+        }
+        return 0;
+    }
+
+    QModelIndex parent(const QModelIndex &index)
+    {
+        TreeItem * pItem = m_handler.findItem(index);
+        if (pItem->parent)
+        {
+            return pItem->parent->index;
+        }
+        return QModelIndex();
+    }
+
+    QVariant data(const QModelIndex &index)
+    {
+        TreeItem *  pParent = m_handler.findItem(index);
+
+        if (pParent)
+        {
+            return pParent->data;
+        }
+        return QVariant();
+    }
+
+    void update()
+    {
+        // TODO: Test data, replace correctly
     }
 };
 
@@ -53,6 +100,9 @@ QVariant ConfigItemTreeModel::headerData(int section, Qt::Orientation orientatio
         return QVariant();
     }
 
+    Q_UNUSED(section)
+    Q_UNUSED(orientation)
+
     return QVariant("Config name");
 }
 
@@ -63,7 +113,7 @@ QModelIndex ConfigItemTreeModel::index(int row, int column, const QModelIndex &p
 
 QModelIndex ConfigItemTreeModel::parent(const QModelIndex &index) const
 {
-    // FIXME: Implement me!
+    return m_pImpl->parent(index);
 }
 
 int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
@@ -71,7 +121,7 @@ int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
     if (!parent.isValid())
         return 0;
 
-    // FIXME: Implement me!
+    return m_pImpl->rowCount(parent);
 }
 
 int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
@@ -79,7 +129,7 @@ int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
     if (!parent.isValid())
         return 0;
 
-    // FIXME: Implement me!
+    return 1;
 }
 
 QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
@@ -87,6 +137,15 @@ QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    // FIXME: Implement me!
-    return QVariant();
+    if (role != Qt::DisplayRole)
+    {
+        return QVariant();
+    }
+
+    return m_pImpl->data(index);
+}
+
+void ConfigItemTreeModel::update()
+{
+    return m_pImpl->update();
 }

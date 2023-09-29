@@ -60,9 +60,14 @@ TreeModelHandler::~TreeModelHandler()
 
 }
 
-TreeItem *TreeModelHandler::findItem(const QModelIndex & index, TreeItem * parent)
+TreeItem *TreeModelHandler::findItem(const QModelIndex & index)
 {
-    return m_pImpl->findItem(index, parent);
+    return m_pImpl->findItem(index, &m_pImpl->head);
+}
+
+TreeItem & TreeModelHandler::getHead()
+{
+    return m_pImpl->head;
 }
 
 QModelIndex TreeModelHandler::getHeadIndex()
