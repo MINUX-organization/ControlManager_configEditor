@@ -12,9 +12,11 @@ INCLUDEPATH += src
 
 SOURCES += \
     src/*.cpp \
+    src/configsLib/*.cpp \
     src/gui/*.cpp
 
 HEADERS += \
+    src/configsLib/*.h \
     src/gui/*.h
 
 FORMS += \
