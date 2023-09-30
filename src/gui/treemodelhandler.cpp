@@ -29,6 +29,7 @@ struct TreeModelHandler::Impl
     {
         if (parent->index.internalId() == index.internalId())
         {
+            qDebug() << "Found item, its data: " << parent->data;
             return parent;
         }
 
@@ -37,19 +38,12 @@ struct TreeModelHandler::Impl
         for (uint8_t i = 0; i < childrenVectSize; i++)
         {
             pChild = parent->childrenVect[i];
-            if ((i + 1) < childrenVectSize) // Check if it's last item
+            pChild = findItem(index, pChild);
+            if (pChild != nullptr)
             {
-                if (pChild->index.internalId() > index.internalId())
-                {
-                    findItem(index, pChild - 1);
-                }
-            }
-            else
-            {
-                findItem(index, pChild);
+                return pChild;
             }
         }
-
         return nullptr;
     }
 };

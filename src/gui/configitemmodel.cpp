@@ -56,7 +56,7 @@ struct ConfigItemTreeModel::Impl
         {
             return pItem->parent->index;
         }
-        return QModelIndex();
+        return m_handler.getHeadIndex();
     }
 
     QVariant data(const QModelIndex &index)
@@ -153,7 +153,7 @@ int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
 {
     qDebug() << "[Row count] Called";
     if (!parent.isValid())
-        return 0;
+        return m_pImpl->m_handler.getHead().childrenVect.size();
 
     qDebug() << "[Row count] Returning row count";
     return m_pImpl->rowCount(parent);
@@ -161,10 +161,6 @@ int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
 
 int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
 {
-    qDebug() << "[Column count] Called";
-    if (!parent.isValid())
-        return 0;
-
     qDebug() << "[Column count] Returning 1";
     return 1;
 }
@@ -177,6 +173,7 @@ QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
 
     if (role != Qt::DisplayRole)
     {
+        qDebug() << "[DATA] Not a display role!";
         return QVariant();
     }
 
