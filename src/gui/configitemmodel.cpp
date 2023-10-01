@@ -77,40 +77,49 @@ struct ConfigItemTreeModel::Impl
         return QVariant();
     }
 
+    void addElement(TreeItem * parent, const QString & itemData)
+    {
+        TreeItem * pBufferItem;
+
+        pBufferItem = new TreeItem;
+        pBufferItem->parent = parent;
+        pBufferItem->index = m_mainClass->createIndex(parent->childrenVect.size(), 0, m_handler.getNextId());
+        pBufferItem->data = itemData;
+        parent->childrenVect.push_back( pBufferItem );
+    }
+
     void update()
     {
         // TODO: Test data, replace correctly
 
         TreeItem & head = m_handler.getHead();
 
-        head.data = "Aboba head";
+        addElement(&head, "Miner config");
 
-        TreeItem * pBufferItem;
-        for (int i = 0; i < 10; i++)
-        {
-            pBufferItem = new TreeItem;
+        addElement(head.childrenVect[0], "GPUs");
+        addElement(head.childrenVect[0]->childrenVect[0], "GPU 1 (AMD Radeon 580)");
+        addElement(head.childrenVect[0]->childrenVect[0], "GPU 2 (NVIDIA Unknown)");
 
-            pBufferItem->parent = &head;
+        addElement(head.childrenVect[0], "CPUs");
+        addElement(head.childrenVect[0]->childrenVect[1], "CPU 1 (AMD Ryzen 5300U)");
+        addElement(head.childrenVect[0]->childrenVect[1], "CPU 2 (Intel i3-240M)");
 
-            pBufferItem->index = m_mainClass->createIndex(i, 0, m_handler.getNextId());
+        addElement(head.childrenVect[0], "Hard drives");
+        addElement(head.childrenVect[0]->childrenVect[2], "Unknown 1");
+        addElement(head.childrenVect[0]->childrenVect[2], "Asus 17926-MSH");
 
-            pBufferItem->data = QString("AbobaChildMain_[") + QString::number(i) + "]";
+        addElement(&head, "Commission config");
 
-            head.childrenVect.push_back( pBufferItem );
+        addElement(head.childrenVect[1], "Mining configs");
+        addElement(head.childrenVect[1]->childrenVect[0], "GPUs");
+        addElement(head.childrenVect[1]->childrenVect[0], "CPUs");
 
-            for (int j = 0; j < 3; j++)
-            {
-                pBufferItem = new TreeItem;
+        addElement(head.childrenVect[1], "Time configs");
 
-                pBufferItem->parent = head.childrenVect[i];
+        addElement(&head, "UWA config");
 
-                pBufferItem->index = m_mainClass->createIndex(j, 0, m_handler.getNextId());
-
-                pBufferItem->data = QString("AbobaChildChild_[") + QString::number(i) + " - " + QString::number(j) + "]";
-
-                head.childrenVect[i]->childrenVect.push_back( pBufferItem );
-            }
-        }
+        addElement(head.childrenVect[2], "Connection");
+        addElement(head.childrenVect[2], "Other");
     }
 };
 

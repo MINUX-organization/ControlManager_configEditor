@@ -171,22 +171,6 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="2">
-     <widget class="QListView" name="options_listView">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="2">
      <widget class="QTreeView" name="configFile_treeView">
       <property name="minimumSize">
@@ -195,6 +179,20 @@
         <height>400</height>
        </size>
       </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QListWidget" name="listWidget">
+      <item>
+       <property name="text">
+        <string>Option 1 : UNDEFINED</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Option 2 : UNDEFINED</string>
+       </property>
+      </item>
      </widget>
     </item>
    </layout>

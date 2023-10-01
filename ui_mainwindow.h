@@ -15,7 +15,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QListView>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
@@ -52,8 +52,8 @@ public:
     QPushButton *editOption_pushButton;
     QPushButton *removeOption_pushButton;
     QProgressBar *progressBar;
-    QListView *options_listView;
     QTreeView *configFile_treeView;
+    QListWidget *listWidget;
     QMenuBar *menubar;
     QStatusBar *statusbar;
     QToolBar *toolBar;
@@ -158,22 +158,18 @@ public:
 
         gridLayout->addWidget(widget, 1, 2, 1, 1);
 
-        options_listView = new QListView(centralwidget);
-        options_listView->setObjectName(QString::fromUtf8("options_listView"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(options_listView->sizePolicy().hasHeightForWidth());
-        options_listView->setSizePolicy(sizePolicy1);
-        options_listView->setMaximumSize(QSize(16777215, 16777215));
-
-        gridLayout->addWidget(options_listView, 0, 2, 1, 1);
-
         configFile_treeView = new QTreeView(centralwidget);
         configFile_treeView->setObjectName(QString::fromUtf8("configFile_treeView"));
         configFile_treeView->setMinimumSize(QSize(350, 400));
 
         gridLayout->addWidget(configFile_treeView, 0, 0, 1, 2);
+
+        listWidget = new QListWidget(centralwidget);
+        new QListWidgetItem(listWidget);
+        new QListWidgetItem(listWidget);
+        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+
+        gridLayout->addWidget(listWidget, 0, 2, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -202,6 +198,15 @@ public:
         addOption_pushButton->setText(QCoreApplication::translate("MainWindow", "Add option", nullptr));
         editOption_pushButton->setText(QCoreApplication::translate("MainWindow", "Edit option", nullptr));
         removeOption_pushButton->setText(QCoreApplication::translate("MainWindow", "Remove option", nullptr));
+
+        const bool __sortingEnabled = listWidget->isSortingEnabled();
+        listWidget->setSortingEnabled(false);
+        QListWidgetItem *___qlistwidgetitem = listWidget->item(0);
+        ___qlistwidgetitem->setText(QCoreApplication::translate("MainWindow", "Option 1 : UNDEFINED", nullptr));
+        QListWidgetItem *___qlistwidgetitem1 = listWidget->item(1);
+        ___qlistwidgetitem1->setText(QCoreApplication::translate("MainWindow", "Option 2 : UNDEFINED", nullptr));
+        listWidget->setSortingEnabled(__sortingEnabled);
+
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
