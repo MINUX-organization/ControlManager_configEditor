@@ -7,6 +7,7 @@ using namespace ConfigItemModel;
 struct TreeModelHandler::Impl
 {
     TreeItem head;
+    size_t m_currentId {1};
 
     ~Impl()
     {
@@ -29,13 +30,12 @@ struct TreeModelHandler::Impl
     {
         if (parent->index.internalId() == index.internalId())
         {
-            qDebug() << "Found item, its data: " << parent->data;
             return parent;
         }
 
         const int childrenVectSize = parent->childrenVect.size();
         TreeItem * pChild;
-        for (uint8_t i = 0; i < childrenVectSize; i++)
+        for (int i = 0; i < childrenVectSize; i++)
         {
             pChild = parent->childrenVect[i];
             pChild = findItem(index, pChild);
@@ -72,4 +72,10 @@ TreeItem & TreeModelHandler::getHead()
 QModelIndex TreeModelHandler::getHeadIndex()
 {
     return m_pImpl->head.index;
+}
+
+size_t TreeModelHandler::getNextId()
+{
+    m_pImpl->m_currentId++;
+    return m_pImpl->m_currentId - 1;
 }

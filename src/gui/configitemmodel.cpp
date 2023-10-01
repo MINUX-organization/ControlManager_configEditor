@@ -52,16 +52,23 @@ struct ConfigItemTreeModel::Impl
     QModelIndex parent(const QModelIndex &index)
     {
         TreeItem * pItem = m_handler.findItem(index);
+
+        if (!pItem)
+        {
+            return QModelIndex();
+        }
+
         if (pItem->parent)
         {
             return pItem->parent->index;
         }
-        return m_handler.getHeadIndex();
+
+        return QModelIndex(); // m_handler.getHeadIndex();
     }
 
     QVariant data(const QModelIndex &index)
     {
-        TreeItem *  pParent = m_handler.findItem(index);
+        TreeItem * pParent = m_handler.findItem(index);
 
         if (pParent)
         {
@@ -78,14 +85,14 @@ struct ConfigItemTreeModel::Impl
 
         head.data = "Aboba head";
 
-        quintptr currentId = 1;
-
         TreeItem * pBufferItem;
         for (int i = 0; i < 10; i++)
         {
             pBufferItem = new TreeItem;
 
-            pBufferItem->index = m_mainClass->createIndex(i, 0, currentId++);
+            pBufferItem->parent = &head;
+
+            pBufferItem->index = m_mainClass->createIndex(i, 0, m_handler.getNextId());
 
             pBufferItem->data = QString("AbobaChildMain_[") + QString::number(i) + "]";
 
@@ -95,7 +102,9 @@ struct ConfigItemTreeModel::Impl
             {
                 pBufferItem = new TreeItem;
 
-                pBufferItem->index = m_mainClass->createIndex(i, 0, currentId++);
+                pBufferItem->parent = head.childrenVect[i];
+
+                pBufferItem->index = m_mainClass->createIndex(j, 0, m_handler.getNextId());
 
                 pBufferItem->data = QString("AbobaChildChild_[") + QString::number(i) + " - " + QString::number(j) + "]";
 
@@ -139,50 +148,41 @@ QVariant ConfigItemTreeModel::headerData(int section, Qt::Orientation orientatio
 
 QModelIndex ConfigItemTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    qDebug() << "[INDEX] Called";
     return m_pImpl->findIndex(row, column, parent);
 }
 
 QModelIndex ConfigItemTreeModel::parent(const QModelIndex &index) const
 {
-    qDebug() << "[PARENT] Called";
     return m_pImpl->parent(index);
 }
 
 int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
 {
-    qDebug() << "[Row count] Called";
     if (!parent.isValid())
         return m_pImpl->m_handler.getHead().childrenVect.size();
 
-    qDebug() << "[Row count] Returning row count";
     return m_pImpl->rowCount(parent);
 }
 
 int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
 {
-    qDebug() << "[Column count] Returning 1";
     return 1;
 }
 
 QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "[DATA] Called";
     if (!index.isValid())
         return QVariant();
 
     if (role != Qt::DisplayRole)
     {
-        qDebug() << "[DATA] Not a display role!";
         return QVariant();
     }
 
-    qDebug() << "[UPDATE] Returning data from index";
     return m_pImpl->data(index);
 }
 
 void ConfigItemTreeModel::update()
 {
-    qDebug() << "[UPDATE] Called";
     return m_pImpl->update();
 }

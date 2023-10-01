@@ -25,6 +25,8 @@ public:
 
     TreeItem & getHead();
     QModelIndex getHeadIndex();
+
+    size_t getNextId();
 private:
     struct Impl;
     std::unique_ptr<Impl> m_pImpl;
