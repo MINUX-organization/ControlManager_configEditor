@@ -7,6 +7,8 @@
 
 #include <QDebug>
 
+#include <msgpack.hpp>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

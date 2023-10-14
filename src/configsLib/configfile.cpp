@@ -10,9 +10,8 @@ using namespace ConfigsLib;
 
 struct ConfigFile::Impl
 {
-    std::string m_configUID;
     std::string m_configPath;
-    std::fstream m_configFile;
+    std::vector<std::string> m_classes;
 
     // Parses file inserted
     void updateData()
@@ -55,26 +54,7 @@ std::string ConfigFile::filePath() const
     return m_pImpl->m_configPath;
 }
 
-void ConfigFile::addClass(const std::string &uid, const std::string value)
+void ConfigFile::addClass(const std::string value)
 {
 
 }
-
-
-
-// template<typename T>
-//std::string ConfigFile::compressClass(const testStruct &classObject)
-//{
-//    std::stringstream buffer;
-//    msgpack::pack(buffer, classObject);
-//    return buffer.str();
-//}
-
-// template<typename T>
-//testStruct ConfigFile::decompressClass(const std::string &serializedClass)
-//{
-//    msgpack::object_handle oh;
-//    msgpack::unpack(oh, serializedClass.c_str(), serializedClass.size());
-//    testStruct result = oh.get();
-//    return result;
-//}
