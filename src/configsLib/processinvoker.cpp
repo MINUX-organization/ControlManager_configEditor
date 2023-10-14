@@ -10,7 +10,7 @@
 template <typename T>
 void log(const T & data)
 {
-    qDebug() << "[PROCESS INVOKER]: " << data << endl;
+    qDebug() << "[PROCESS INVOKER]: " << data << Qt::endl;
 }
 #endif // defined(PROCESS_INVOKER_STATIC_LOGGING) || defined(PROCESS_INVOKER_CLASS_LOGGING)
 
@@ -42,7 +42,7 @@ int ProcessInvoker::invoke(const QString &processName, const int timeout)
 
         if (process.isOpen())
         {
-            if (kill(process.pid(), SIGINT))
+            if (kill(process.processId(), SIGINT))
             {
                 // Here will be SIGINT to main program
             }
@@ -90,7 +90,7 @@ int ProcessInvoker::invoke(const QString &processName, const QStringList &proces
 
         if (process.isOpen())
         {
-            if (kill(process.pid(), SIGINT))
+            if (kill(process.processId(), SIGINT))
             {
                 // Here will be SIGINT to main program
             }
@@ -138,7 +138,7 @@ int ProcessInvoker::invoke(const QString &processName, const QStringList &proces
 
         if (process.isOpen())
         {
-            if (kill(process.pid(), SIGINT))
+            if (kill(process.processId(), SIGINT))
             {
                 // Here will be SIGINT to main program
             }

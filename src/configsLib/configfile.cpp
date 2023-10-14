@@ -2,6 +2,7 @@
 
 #include "encryption.h"
 #include <fstream>
+#include <sstream>
 
 #include <msgpack.hpp>
 
@@ -54,10 +55,26 @@ std::string ConfigFile::filePath() const
     return m_pImpl->m_configPath;
 }
 
-
-
-template<typename T>
-std::string ConfigFile::compressFile(const T &classObject)
+void ConfigFile::addClass(const std::string &uid, const std::string value)
 {
 
 }
+
+
+
+// template<typename T>
+//std::string ConfigFile::compressClass(const testStruct &classObject)
+//{
+//    std::stringstream buffer;
+//    msgpack::pack(buffer, classObject);
+//    return buffer.str();
+//}
+
+// template<typename T>
+//testStruct ConfigFile::decompressClass(const std::string &serializedClass)
+//{
+//    msgpack::object_handle oh;
+//    msgpack::unpack(oh, serializedClass.c_str(), serializedClass.size());
+//    testStruct result = oh.get();
+//    return result;
+//}

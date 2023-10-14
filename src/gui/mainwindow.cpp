@@ -3,6 +3,8 @@
 
 #include "configitemmodel.h"
 
+#include "configsLib/configfile.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)

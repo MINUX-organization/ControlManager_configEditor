@@ -175,6 +175,7 @@ int ConfigItemTreeModel::rowCount(const QModelIndex &parent) const
 
 int ConfigItemTreeModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return 1;
 }
 

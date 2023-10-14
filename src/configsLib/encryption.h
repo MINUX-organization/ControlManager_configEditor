@@ -9,7 +9,7 @@
 
 /// Switches for includes and functions in OpenSSL algorithms
 // #define AES_ENCRYPTION
-#define RSA_ENCRYPTION
+// #define RSA_ENCRYPTION
 
 /// ChaCha20 based on sodium, Ubuntu install:
 /// sudo apt install libsodium-dev
