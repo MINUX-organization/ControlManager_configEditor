@@ -1,4 +1,4 @@
-#include "../include/encryption.h"
+#include "encryption.h"
 
 std::string base64_encode(const std::string& input)
 {
@@ -46,6 +46,8 @@ const std::string getErrorText()
 {
     return ERR_error_string(ERR_get_error(), nullptr);
 }
+
+
 
 
 #ifdef AES_ENCRYPTION
@@ -180,6 +182,7 @@ bool aesDecrypt(std::string& ciphertext, const std::string& key, const std::stri
     return true;
 }
 #endif // AES_ENCRYPTION
+
 
 
 

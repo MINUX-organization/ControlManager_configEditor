@@ -8,8 +8,8 @@
 /// -lsodium
 
 /// Switches for includes and functions in OpenSSL algorithms
-#define AES_ENCRYPTION
-// #define RSA_ENCRYPTION
+// #define AES_ENCRYPTION
+#define RSA_ENCRYPTION
 
 /// ChaCha20 based on sodium, Ubuntu install:
 /// sudo apt install libsodium-dev
@@ -61,9 +61,9 @@ std::string base64_encode(const std::string& input);
 std::string base64_decode(const std::string& input);
 
 /**
-* @brief Get error text, if some method returned false
-* @return Text of error got
-*/
+ * @brief Get text of error got while encryption
+ * @return String with text of error got
+ */
 const std::string getErrorText();
 
 

@@ -1,15 +1,27 @@
 #include "configfile.h"
 
+#include "encryption.h"
 #include <fstream>
+
+#include <msgpack.hpp>
 
 using namespace ConfigsLib;
 
 struct ConfigFile::Impl
 {
+    std::string m_configUID;
+    std::string m_configPath;
     std::fstream m_configFile;
+
+    // Parses file inserted
+    void updateData()
+    {
+
+    }
 };
 
-ConfigFile::ConfigFile()
+ConfigFile::ConfigFile() :
+    m_pImpl { new Impl }
 {
 
 }
@@ -19,8 +31,33 @@ ConfigFile::~ConfigFile()
 
 }
 
-template<typename T>
-ConfigFile &ConfigFile::operator[](const T value)
+bool ConfigFile::setFile(const std::string &filePath)
 {
-    return *this;
+    // Test if file exist
+    std::fstream openTestFile(filePath, std::ios_base::in);
+    if (!openTestFile.is_open())
+    {
+        return false;
+    }
+
+    // Set file
+    m_pImpl->m_configPath = filePath;
+
+    // Update configuratio using file
+    m_pImpl->updateData();
+
+    return true;
+}
+
+std::string ConfigFile::filePath() const
+{
+    return m_pImpl->m_configPath;
+}
+
+
+
+template<typename T>
+std::string ConfigFile::compressFile(const T &classObject)
+{
+
 }

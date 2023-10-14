@@ -2,21 +2,31 @@
 #define CONFIGFILE_H
 
 #include <memory>
+#include <vector>
 
 namespace ConfigsLib
 {
 
 class ConfigFile
 {
+    friend class ConfigWorker;
 public:
     ConfigFile();
     ~ConfigFile();
 
-    void setFilePath(const std::string & filePath);
-    std::string getFilePath() const;
+    bool setFile(const std::string & filePath);
+    std::string filePath() const;
 
     template <typename T>
-    ConfigFile & operator[](const T value);
+    std::string compressFile(const T & classObject);
+    void addClass(const std::string & uid, const std::string value);
+
+    template <typename T>
+    T compressFile(const std::string & serializedClass);
+    std::string loadClass(const std::string & uid);
+
+    std::string configUid() const;
+    std::vector<std::string> contentUids() const;
 
 private:
     struct Impl;
