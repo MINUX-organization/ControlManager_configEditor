@@ -43,7 +43,7 @@ class ConfigFile
 {
     friend class ConfigWorker;
 public:
-    ConfigFile();
+    ConfigFile(bool clearAndSaveOnDestroy = true);
     ~ConfigFile();
 
     template <typename T>
@@ -52,19 +52,28 @@ public:
     template <typename T>
     static T decompressClass(const std::string & serializedClass);
 
+    bool createFile(const std::string & filePath);
     bool setFile(const std::string & filePath);
     std::string filePath() const;
 
-    void addClass(const std::string value);
+    bool addClass(const std::string & value);
+    std::string getClass(const uint64_t index);
 
+    bool save();
+    void load();
 
-    std::string loadClass(const uint64_t index);
-    uint64_t configsCount() const;
+    void clearBuffer();
+    void clearFile();
+
+    uint64_t classesCount() const;
+    const char * errorText() const;
 
 private:
     struct Impl;
     std::unique_ptr<Impl> m_pImpl;
 };
+
+
 
 
 template <typename T>

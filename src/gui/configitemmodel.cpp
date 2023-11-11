@@ -1,6 +1,6 @@
 #include "configitemmodel.h"
 
-#include "configsLib/configworker.h"
+#include "configsLib/configtree.h"
 
 #include "treemodelhandler.h"
 
@@ -11,12 +11,13 @@ using namespace ConfigItemModel;
 struct ConfigItemTreeModel::Impl
 {
     TreeModelHandler m_handler;
-    ConfigsLib::ConfigWorker m_configWorker;
+    ConfigsLib::ConfigTree m_configTree;
 
     ConfigItemTreeModel * m_mainClass {nullptr};
 
-    Impl(ConfigItemTreeModel * parent) : m_mainClass(parent), m_handler(parent->createIndex(0, 0, (quintptr)0))
+    Impl(ConfigItemTreeModel * parent) : m_handler(parent->createIndex(0, 0, (quintptr)0))
     {
+        m_mainClass = parent;
         if (!m_mainClass)
         {
             throw std::runtime_error("[ConfigItemTreeModel] Class init error!");
