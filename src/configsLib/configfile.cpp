@@ -6,8 +6,6 @@
 
 #include <msgpack.hpp>
 
-#include <QDebug>
-
 using namespace ConfigsLib;
 
 struct ConfigFile::Impl

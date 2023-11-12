@@ -6,6 +6,8 @@
 
 #include <msgpack.hpp>
 
+#include "encryption.h"
+
 namespace ConfigsLib
 {
 
@@ -47,10 +49,10 @@ public:
     ~ConfigFile();
 
     template <typename T>
-    static std::string compressClass(const T & classObject);
+    static std::string compressClass(const T & classObject, bool encrypted = false, const std::string & encryptionKey = "");
 
     template <typename T>
-    static T decompressClass(const std::string & serializedClass);
+    static T decompressClass(const std::string & serializedClass, bool encrypted = false, const std::string & encryptionKey = "");
 
     bool createFile(const std::string & filePath);
     bool setFile(const std::string & filePath);
@@ -77,22 +79,86 @@ private:
 
 
 template <typename T>
-T ConfigFile::decompressClass(const std::string &serializedClass)
+T ConfigFile::decompressClass(const std::string &serializedClass, bool encrypted, const std::string & encryptionKey)
 {
     T result;
-    msgpack::object_handle oh;
-    msgpack::unpack(oh, serializedClass.c_str(), serializedClass.size());
-    msgpack::object obj = oh.get();
-    obj.convert(result);
+
+    if (encrypted)
+    {
+        std::string decryptedBuffer;
+
+        if (encryptionKey == "")
+        {
+            throw std::runtime_error("[compressClass] Not provided encryption key");
+        }
+
+        if (!decryptPacketAES(base64_decode(serializedClass), encryptionKey, decryptedBuffer))
+        {
+            throw std::runtime_error( std::string("[compressClass] Error decrypting data: ") + getErrorText() );
+        }
+
+        try
+        {
+            msgpack::object_handle oh;
+            msgpack::unpack(oh, decryptedBuffer.c_str(), decryptedBuffer.size());
+            msgpack::object obj = oh.get();
+            obj.convert(result);
+        }
+        catch (std::exception & ex)
+        {
+            throw std::runtime_error(std::string("[compressClass] Error unpacking data. Error message: ") + ex.what());
+        }
+    }
+    else
+    {
+        try {
+            msgpack::object_handle oh;
+            msgpack::unpack(oh, serializedClass.c_str(), serializedClass.size());
+            msgpack::object obj = oh.get();
+            obj.convert(result);
+        }
+        catch (std::exception & ex)
+        {
+            throw std::runtime_error(std::string("[compressClass] Error unpacking data. Error message: ") + ex.what());
+        }
+    }
+
     return result;
 }
 
 
 template <typename T>
-std::string ConfigFile::compressClass(const T &classObject)
+std::string ConfigFile::compressClass(const T &classObject, bool encrypted, const std::string & encryptionKey)
 {
     std::stringstream buffer;
-    msgpack::pack(buffer, classObject);
+
+    try
+    {
+        msgpack::pack(buffer, classObject);
+    }
+    catch (std::exception & ex)
+    {
+        throw std::runtime_error(std::string("[compressClass] Error packing data. Error message: ") + ex.what());
+    }
+
+    if (encrypted)
+    {
+        std::string encryptedBuffer;
+        std::string serializedClass = buffer.str();
+
+        if (encryptionKey == "")
+        {
+            throw std::runtime_error("[compressClass] Not provided encryption key");
+        }
+
+        if (!encryptPacketAES(serializedClass, encryptionKey, encryptedBuffer))
+        {
+            throw std::runtime_error( std::string("[compressClass] Error encrypting data: ") + getErrorText() );
+        }
+
+        return base64_encode(encryptedBuffer);
+    }
+
     return buffer.str();
 }
 

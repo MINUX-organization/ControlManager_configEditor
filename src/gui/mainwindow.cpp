@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
         ConfigsLib::ConfigFile cf(false);
         std::string buffer;
 
+        const std::string encryptionKey = generateKeyAES();
+
         if (!cf.setFile("testFile.txt"))
         {
             if (!cf.createFile("testFile.txt"))
@@ -41,9 +43,9 @@ MainWindow::MainWindow(QWidget *parent)
 
         for (int i = 0; i < 10; i++)
         {
-            ts.abobaData = std::string("Its class ") + std::to_string(i);
+            ts.abobaData = std::string("DATA OF THIS CLASS IS THAT Its class ") + std::to_string(i);
             ts.intData = i;
-            buffer = cf.compressClass(ts);
+            buffer = cf.compressClass(ts, true, encryptionKey);
             cf.addClass(buffer);
         }
         if (!cf.save())
@@ -60,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
         for (int i = 0; i < cf.classesCount(); i++)
         {
             buffer = cf.getClass(i);
-            ts = cf.decompressClass<testStruct>(buffer);
+            ts = cf.decompressClass<testStruct>(buffer, true, encryptionKey);
             qDebug() << ts.abobaData.c_str() << ts.intData;
         }
     }
