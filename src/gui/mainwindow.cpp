@@ -86,7 +86,7 @@ void MainWindow::setupModel()
 {
     m_pConfigModel = new ConfigItemModel::ConfigItemTreeModel(this);
 
-    m_pConfigModel->update();
+    m_pConfigModel->updateData();
 
     ui->configFile_treeView->setModel(m_pConfigModel);
 }

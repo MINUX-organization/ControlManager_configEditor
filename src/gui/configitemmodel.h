@@ -31,7 +31,7 @@ public:
     void setConfigType(const QString & data);
 
     // Parses data from config file
-    void update();
+    void updateData();
 
 private:
     struct Impl;

@@ -1,6 +1,6 @@
 #include "configitemmodel.h"
 
-#include "configsLib/configtree.h"
+#include "configsLib/commissionconfiguration.h"
 
 #include "treemodelhandler.h"
 
@@ -11,7 +11,6 @@ using namespace ConfigItemModel;
 struct ConfigItemTreeModel::Impl
 {
     TreeModelHandler m_handler;
-    ConfigsLib::ConfigTree m_configTree;
 
     ConfigItemTreeModel * m_mainClass {nullptr};
 
@@ -89,7 +88,7 @@ struct ConfigItemTreeModel::Impl
         parent->childrenVect.push_back( pBufferItem );
     }
 
-    void update()
+    void updateData()
     {
         // TODO: Test data, replace correctly
 
@@ -193,7 +192,7 @@ QVariant ConfigItemTreeModel::data(const QModelIndex &index, int role) const
     return m_pImpl->data(index);
 }
 
-void ConfigItemTreeModel::update()
+void ConfigItemTreeModel::updateData()
 {
-    return m_pImpl->update();
+    return m_pImpl->updateData();
 }
